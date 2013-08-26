@@ -5,5 +5,15 @@
  * node module documentation at http://nodejs.org/api/modules.html. */
 
 var handleRequest = function(request, response) {
-
+  response.writeHead(200,{
+    "Content-Type": "text/plain",
+    "access-control-allow-origin": "*",
+    "access-control-allow-methods": "GET, POST, PUT, DELETE, OPTIONS",
+    "access-control-allow-headers": "content-type, accept",
+    "access-control-max-age": 10
+  });
+  response.write("Testing handleRequest");
+  response.end();
 };
+
+exports.handleRequest = handleRequest;
