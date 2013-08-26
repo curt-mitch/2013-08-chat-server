@@ -3,8 +3,16 @@
  * basic-server.js.  So you must figure out how to export the function
  * from this file and include it in basic-server.js. Check out the
  * node module documentation at http://nodejs.org/api/modules.html. */
+var url = require("url");
 
 var handleRequest = function(request, response) {
+  // get request URL.  get that URL's pathname
+  // if pathname = "/1/classes/messages" {return messages}
+  // else return str"You didn't ask for shit"
+
+  var messagePath = url.parse(request.url).pathname;
+  console.log("messagePath: ", messagePath);
+
   response.writeHead(200,{
     "Content-Type": "text/plain",
     "access-control-allow-origin": "*",

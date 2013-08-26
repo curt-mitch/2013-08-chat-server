@@ -5,6 +5,10 @@ var http = require("http");
 
 var handler = require("./request-handler.js");
 
+// import URL module
+
+var url = require("url");
+
 /* This is the callback function that will be called each time a
  * client (i.e.. a web browser) makes a request to our server. */
 var requestListener = function (request, response) {
