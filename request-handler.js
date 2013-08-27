@@ -17,39 +17,44 @@ var handleRequest = function(request, response) {
   var messagePath = url.parse(request.url).pathname;
   //console.log("messagePath: ", messagePath);
 
+  var responseHeaders = {
+    "Content-Type": "text/plain",
+    "access-control-allow-origin": "*",
+    "access-control-allow-methods": "GET, POST, PUT, DELETE, OPTIONS",
+    "access-control-allow-headers": "content-type, contentType, accept",
+    "access-control-max-age": 10
+  };
+
   if (messagePath === "/1/classes/messages"){
     if (request.method === "OPTIONS"){
+      response.writeHead(200, responseHeaders);
+      response.end(''); 
+    }
+
+    if(request.method == "POST") {
+      response.writeHead(201, responseHeaders);
+      request.on('data', function(data){
+        _body = '';
+        _body += data;
+      });
+      request.on('end', function(){
+        var newMessages = JSON.parse(_body);
+        storage.messages.push(newMessages);
+        response.end('');
+      });
+    }
+
+    if(request.method == "GET") {
+      var jsonMessages = JSON.stringify(storage.messages);
       response.writeHead(200, {
-        "Content-Type": "text/plain",
+        'Content-Type': 'application/json',
         "access-control-allow-origin": "*",
         "access-control-allow-methods": "GET, POST, PUT, DELETE, OPTIONS",
         "access-control-allow-headers": "content-type, contentType, accept",
-        "access-control-max-age": 10 //seconds
-        //"Connection": "Keep-Alive"
-      });
-      response.end(''); // do we want to keep alive?
-
-
-    } else if(request.method === "POST") {
-      var body = '';
-      request.on('data', function(data){
-        body += data;
-      });
-      request.on('end', function(){
-        var newMessages = JSON.parse(body);
-        storage.messages.push(newMessages);
-      });
-      response.writeHead(200);
-      response.end('');
-
-
-    } else if(request.method === "GET") {
-      var jsonMessages = JSON.stringify(storage.messages);
-      response.writeHead(200,{
-        'Content-Type': 'application/json',
+        "access-control-max-age": 10,
         'data': storage.messages
       });
-      response.end('fdsa');
+      response.end('');
     }
 
   } else {
