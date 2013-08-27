@@ -20,30 +20,30 @@ var handleRequest = function(request, response) {
         "Content-Type": "text/plain",
         "access-control-allow-origin": "*",
         "access-control-allow-methods": "GET, POST, PUT, DELETE, OPTIONS",
-        "access-control-allow-headers": "content-type, accept",
-        "access-control-max-age": 10
+        "access-control-allow-headers": "content-type, contentType, accept",
+        "access-control-max-age": 10 //seconds
+        //"Connection": "Keep-Alive"
       });
-      response.end();
-    } else if(request.method === "POST") {
-      storage.messages.push(); //what do we pass into this?
+      response.end(''); // do we want to keep alive?
+    } else if(request.method === "POST") {  
+      storage.messages.push(???); //what do we pass into this?
       response.writeHead(200);
 
-      response.end();
+      response.end('fdsa');
     } else if(request.method === "GET") {
       var jsonMessages = JSON.stringify(storage.messages);
       response.writeHead(200,{
         'Content-Type': 'application/json',
         'data': jsonMessages
       });
-      response.end();
+      response.end('fdsa');
     }
 
   } else {
     response.writeHead(404);
     response.write("Y U NO ASK 4 ANYTHING USEFUL???");
+    response.end();
   }
-
-  response.end();
 };
 
 exports.handleRequest = handleRequest;
