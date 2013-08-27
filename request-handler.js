@@ -3,8 +3,11 @@
  * basic-server.js.  So you must figure out how to export the function
  * from this file and include it in basic-server.js. Check out the
  * node module documentation at http://nodejs.org/api/modules.html. */
+ // importing module.export objects
 var url = require("url");
 var storage = require("./storage.js");
+
+//request handler to handle HTTP request from Chat Client
 
 var handleRequest = function(request, response) {
   // get request URL.  get that URL's pathname
@@ -25,16 +28,26 @@ var handleRequest = function(request, response) {
         //"Connection": "Keep-Alive"
       });
       response.end(''); // do we want to keep alive?
-    } else if(request.method === "POST") {  
-      storage.messages.push(???); //what do we pass into this?
-      response.writeHead(200);
 
-      response.end('fdsa');
+
+    } else if(request.method === "POST") {
+      var body = '';
+      request.on('data', function(data){
+        body += data;
+      });
+      request.on('end', function(){
+        var newMessages = JSON.parse(body);
+        storage.messages.push(newMessages);
+      });
+      response.writeHead(200);
+      response.end('');
+
+
     } else if(request.method === "GET") {
       var jsonMessages = JSON.stringify(storage.messages);
       response.writeHead(200,{
         'Content-Type': 'application/json',
-        'data': jsonMessages
+        'data': storage.messages
       });
       response.end('fdsa');
     }
@@ -47,3 +60,23 @@ var handleRequest = function(request, response) {
 };
 
 exports.handleRequest = handleRequest;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
