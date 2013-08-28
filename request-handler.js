@@ -18,7 +18,7 @@ var handleRequest = function(request, response) {
   //console.log("messagePath: ", messagePath);
 
   var responseHeaders = {
-    "Content-Type": "text/plain",
+    "Content-Type": "text/plain, application/json",
     "access-control-allow-origin": "*",
     "access-control-allow-methods": "GET, POST, PUT, DELETE, OPTIONS",
     "access-control-allow-headers": "content-type, contentType, accept",
@@ -28,24 +28,21 @@ var handleRequest = function(request, response) {
   if (messagePath === "/1/classes/messages"){
     if (request.method === "OPTIONS"){
       response.writeHead(200, responseHeaders);
-      response.end(''); 
+      response.end('');
     }
 
     if(request.method == "POST") {
-      response.writeHead(201, responseHeaders);
       request.on('data', function(data){
-        _body = '';
-        _body += data;
-      });
-      request.on('end', function(){
-        var newMessages = JSON.parse(_body);
+        var body = '' + data;
+        var newMessages = JSON.parse(body);
         storage.messages.push(newMessages);
-        response.end('');
       });
+      response.writeHead(201, responseHeaders);
+      var resp = JSON.stringify(storage.messages);
+      response.end(resp);
     }
 
-    if(request.method == "GET") {
-      var jsonMessages = JSON.stringify(storage.messages);
+    if(request.method == "GET"){ 
       response.writeHead(200, {
         'Content-Type': 'application/json',
         "access-control-allow-origin": "*",
@@ -54,7 +51,8 @@ var handleRequest = function(request, response) {
         "access-control-max-age": 10,
         'data': storage.messages
       });
-      response.end('');
+      var resp = JSON.stringify(storage.messages);
+      response.end(resp);
     }
 
   } else {
