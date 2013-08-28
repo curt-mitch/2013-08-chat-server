@@ -25,24 +25,26 @@ var handleRequest = function(request, response) {
     "access-control-max-age": 10
   };
 
-  if (messagePath === "/1/classes/messages"){
+  if (messagePath === "/classes/messages"){
     if (request.method === "OPTIONS"){
       response.writeHead(200, responseHeaders);
       response.end('');
     }
 
     if(request.method == "POST") {
+      response.writeHead(201, responseHeaders);
       request.on('data', function(data){
         var body = '' + data;
         var newMessages = JSON.parse(body);
         storage.messages.push(newMessages);
       });
-      response.writeHead(201, responseHeaders);
-      var resp = JSON.stringify(storage.messages);
-      response.end(resp);
+      request.on('end', function() {
+        var resp = JSON.stringify(storage.messages);
+        response.end(resp);
+      });
     }
 
-    if(request.method == "GET"){ 
+    if(request.method == "GET"){
       response.writeHead(200, {
         'Content-Type': 'application/json',
         "access-control-allow-origin": "*",
@@ -57,7 +59,7 @@ var handleRequest = function(request, response) {
 
   } else {
     response.writeHead(404);
-    response.write("Y U NO ASK 4 ANYTHING USEFUL???");
+    // response.write("Y U NO ASK 4 ANYTHING USEFUL???");
     response.end();
   }
 };

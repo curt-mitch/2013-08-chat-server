@@ -1,6 +1,6 @@
 var storage = {};
 
-storage.messages = [{username:"Nigel", text:"Cheerio, lads."}, {username: "get", text: "money"}];
+storage.messages = [];
 
 // // This puts our storage object onto the exports object Node
 // // already provides for us...
